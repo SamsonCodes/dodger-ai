@@ -7,6 +7,7 @@
 package dodger;
 
 import customgame.Game;
+import customgame.customui.Button;
 import customgame.customui.MessageBox;
 import customgame.states.IState;
 import java.awt.Color;
@@ -18,6 +19,7 @@ public class EvolveState implements IState
     private Game game;
     private EvolveThread evoThread;
     private MessageBox msgBox;
+    private Button interrupt;
     
     public EvolveState(Dodger dodger, Game game)
     {
@@ -31,6 +33,7 @@ public class EvolveState implements IState
         System.out.println("Entering EvolveState");
         msgBox = new MessageBox(game.getGui(), Color.WHITE);
         msgBox.setActive(true);
+        interrupt = new Button(game.getGui(), 0, 50, 100, 50, "interrupt");
         evoThread = new EvolveThread(dodger, game, this);
         evoThread.start();
     }
@@ -48,7 +51,12 @@ public class EvolveState implements IState
         if(evoThread.getCalculated())
         {
             System.out.println("EvoThread calculated!");
-            game.getStateMachine().change("AI");
+            game.getStateMachine().change("game");
+        }
+        interrupt.update();
+        if(interrupt.getPressed())
+        {
+            evoThread.interruptLoop();
         }
     }
 
@@ -58,6 +66,7 @@ public class EvolveState implements IState
         g.setColor(Color.WHITE);
         g.drawString("Evolve State", 0, g.getFont().getSize());
         msgBox.render(g);
+        interrupt.render(g);
     }
     
     public void setMessage(String msg)

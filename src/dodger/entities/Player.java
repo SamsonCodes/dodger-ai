@@ -32,7 +32,7 @@ public class Player extends Entity
         super(game, x, y, width, height);
         lastInput = System.currentTimeMillis();
         inputCooldown = 100;
-        moveStep = 20;
+        moveStep = Dodger.PLAYER_SPEED;
         xDirection = 0;
         yDirection = 0;
         health = MAX_HEALTH;

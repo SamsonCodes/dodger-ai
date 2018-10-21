@@ -50,8 +50,8 @@ public class MenuState implements IState
             {
                 switch (panel.getChoice(0))
                 {
-                    case 0:
-                        game.getStateMachine().change("play");
+                    case 0:                        
+                        game.getStateMachine().change("game");
                         break;
                     case 1: 
                         game.getStateMachine().change("evolve");

@@ -13,14 +13,13 @@ public class Dodger
 {
     private Game game;
     public final static String TITLE = "DODGER";
-    public final static int WIDTH = 1100, HEIGHT = 800, OUTPUT_NR = 2, ENEMY_NUMBER = 5, ENEMY_SPEED = 5;
+    public final static int WIDTH = 1100, HEIGHT = 800, OUTPUT_NR = 2, ENEMY_NUMBER = 5, ENEMY_SPEED = 5, PLAYER_SPEED = 10;
     private Network ai;
     
     public Dodger()
     {
         game = new Game(TITLE, WIDTH, HEIGHT);
-        game.getStateMachine().add("play", new PlayState(game));
-        game.getStateMachine().add("AI", new AIState(this, game));
+        game.getStateMachine().add("game", new GameState(this, game));
         game.getStateMachine().add("menu", new MenuState(game));
         game.getStateMachine().add("evolve", new EvolveState(this, game));
         game.getStateMachine().change("menu");

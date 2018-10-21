@@ -27,6 +27,7 @@ public class EvolveThread extends Thread
     private int topScore, generation;
     private Random random = new Random();  
     private boolean calculated;
+    private boolean interrupt;
     
     public EvolveThread(Dodger dodger, Game game, EvolveState evoState)
     {
@@ -39,13 +40,15 @@ public class EvolveThread extends Thread
     public void start(){
         super.start();
         calculated = false;
+        interrupt = false;
         System.out.println("EvolveThread running");
+        evoState.setMessage("Starting up");
     }
     
     @Override
     public void run()
     {
-        crossGen(new int[]{12, 6, 3}, 50, 3, "_20-10-18");  
+        crossGen(new int[]{12, 6, 3}, 100, 100, "_21-10-18-v2_");  
         calculated = true;
     }
     
@@ -74,15 +77,16 @@ public class EvolveThread extends Thread
         {
             currentGenScore[n] = 0;
         }
-        System.out.print("Gen: " + generation + ", ");
+        System.out.print("Gen: " + generation + ", ");     
+        evoState.setMessage("Generation" + generation + ": 0/" + generations + ", topscore = " + topScore);
         //fitness function, evaluation
         testCurrentGen();
         sortCurrentGen();
         bestNetwork = currentGen[0];
         topScore = currentGenScore[0];
         int bestGen = generation;
-        System.out.println("Topscore = " + currentGenScore[0]);
-        
+        System.out.println("Topscore = " + currentGenScore[0]);              
+        evoState.setMessage("Generation" + generation + ": 0/" + generations + ", topscore = " + topScore);
         System.out.print("Gen: ");
         String s = "";
         s+="Generation" + generation + "\n";
@@ -90,10 +94,10 @@ public class EvolveThread extends Thread
         s+="Network"+(popSize/2-1) + " cost = " + currentGenScore[popSize/2 - 1] + "\n";
         s+="Network"+(popSize-2) + " cost = " + currentGenScore[popSize - 2] + "\n";
         //for generations
-        
-        for(int g = 1; g <= generations; g++)
+        int g = 1;
+        while(g <= generations &! interrupt)
         {
-            generation++;
+            
             //selection + mating + mutation
             Network[] newGen = new Network[currentGen.length];
             for(int i = 0; i < newGen.length; i++)
@@ -113,15 +117,22 @@ public class EvolveThread extends Thread
             {
                 currentGen[i] = newGen[i];
             }
+            
+            
             //evaluation
             testCurrentGen();
             sortCurrentGen();
+            
+            generation++; 
+            System.out.print(generation + ", ");
+            evoState.setMessage("Generation" + generation + ": " + g + "/" + generations + ", topscore = " + topScore);
             
             s+="Generation" + generation + "\n";
             s+="Network"+0 + " cost = " +currentGenScore[0] + "\n";
             s+="Network"+(popSize/2-1) + " cost = " + currentGenScore[popSize/2 - 1] + "\n";
             s+="Network"+(popSize-2) + " cost = " + currentGenScore[popSize - 2] + "\n \n";
-            System.out.print(generation + ", ");
+            
+
             if(currentGenScore[0] > topScore)
             {
                 
@@ -132,6 +143,7 @@ public class EvolveThread extends Thread
                 bestNetwork = currentGen[0];
                 bestGen = (generation);
             }
+            g++;
         }
         System.out.println();
         System.out.println(s);
@@ -351,6 +363,11 @@ public class EvolveThread extends Thread
     public void setAI()
     {
         dodger.setAI(ai);
+    }
+    
+    public void interruptLoop()
+    {
+        interrupt = true;
     }
 
 }
