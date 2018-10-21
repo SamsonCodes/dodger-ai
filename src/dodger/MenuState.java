@@ -15,7 +15,7 @@ public class MenuState implements IState
 {
     private Game game;
     private OptionPanel panel;
-    private final String[] OPTIONS = {"Play", "Settings","Exit"};
+    private final String[] OPTIONS = {"Play", "AI", "Exit"};
     private long startTime;
     private final long START_COOLDOWN = 500;
     
@@ -50,10 +50,11 @@ public class MenuState implements IState
             {
                 switch (panel.getChoice(0))
                 {
-                    case 0: game.getStateMachine().change("base"); break;
+                    case 0:
+                        game.getStateMachine().change("play");
+                        break;
                     case 1: 
-                        System.out.println("Not supported yet"); 
-                        onEnter();
+                        game.getStateMachine().change("evolve");
                         break;
                     case 2:
                         System.exit(0);

@@ -16,7 +16,7 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class BaseState implements IState
+public class AIState implements IState
 {
     private Dodger dodger;
     private Game game;
@@ -26,7 +26,7 @@ public class BaseState implements IState
     private boolean showNetwork;
     private Random random = new Random();
     
-    public BaseState(Dodger dodger, Game game)
+    public AIState(Dodger dodger, Game game)
     {
         this.dodger = dodger;
         this.game = game;
