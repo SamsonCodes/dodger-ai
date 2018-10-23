@@ -8,7 +8,9 @@ package dodger;
 
 import customgame.Game;
 import dodger.entities.Enemy;
+import dodger.entities.Hunter;
 import dodger.entities.Player;
+import dodger.entities.Roamer;
 import dodger.neuralnetwork.Network;
 import dodger.neuralnetwork.SaveManager;
 import dodger.neuralnetwork.XMLReader;
@@ -48,7 +50,7 @@ public class EvolveThread extends Thread
     @Override
     public void run()
     {
-        crossGen(new int[]{12, 6, 3}, 100, 100, "_21-10-18-v2_");  
+        crossGen(new int[]{12, 6}, 100, 100, "_23-10-18-v3_");  
         calculated = true;
     }
     
@@ -165,70 +167,65 @@ public class EvolveThread extends Thread
     {
         for(int n = 0; n < currentGen.length - 1; n++)
         {
-            //to check that gens are unique
-//            System.out.println("CurrentGen[" + n + "]");
-//            for(int x = 0; x < 1; x++)
-//            {
-//                System.out.println("hiddenBiases[" + x + "] = " + currentGen[n].hiddenLayer[x].bias); 
-//            }
-//            System.out.println("");
             
-            ArrayList<Enemy> testEnemies = new ArrayList(); 
-
-                double eWidth = 25;
-                double eHeight = eWidth;
-                for(int i = 0; i < Dodger.ENEMY_NUMBER; i++)
-                {
-                    double x1 = (Dodger.WIDTH - eWidth)*random.nextDouble(); 
-                    double y1 = (Dodger.HEIGHT - eHeight)*random.nextDouble(); 
-                    double xSpeed = Math.signum(0.5 - random.nextDouble())*Dodger.ENEMY_SPEED*(1 + random.nextDouble());
-                    double ySpeed = Math.signum(0.5 - random.nextDouble())*Dodger.ENEMY_SPEED*(1 + random.nextDouble());
-                    Enemy e1 = new Enemy(game, Color.RED, x1, y1, eWidth, eHeight, xSpeed, ySpeed, 1);
-                    testEnemies.add(e1);
-                }
-
-            double pWidth = 50;
-            double pHeight = pWidth;
-            //int[] inputIndices = new int[testEnemies.size() + 4];
-//            for(int q = 0; q < inputIndices.length; q++)
-//            {
-//                inputIndices[q] = q;
-//            }
-            Player testPlayer = new Player(game, Dodger.WIDTH/2 - pWidth/2, Dodger.HEIGHT/2 - pHeight/2, pWidth, pHeight, currentGen[n], testEnemies);
-
-            int cycles = 0;
             int score = 0;
             int cycleLimit = 100000;
+            int testAmount = 10;
+            for(int t = 0; t < testAmount; t++)
+            {
+                ArrayList<Enemy> testEnemies = new ArrayList(); 
 
-            boolean alive = true;
-            while(alive && cycles < cycleLimit)
-            { 
-                if(testPlayer.isActive())
-                {
-                    testPlayer.update();
-                }
-                else
-                {
-                    alive = false;
-                }
-                for(Enemy e: testEnemies)
-                {
-                    e.update();
-                }
-                if(!testPlayer.getEnemyCollisions(testEnemies).isEmpty())
-                {
-                    for(Enemy e: testPlayer.getEnemyCollisions(testEnemies))
+                    double eSize = 25;
+                    for(int i = 0; i < Dodger.ENEMY_NUMBER - 1; i++)
                     {
-                        testPlayer.damage(e.getDamage());
+                        double x1 = (Dodger.WIDTH - eSize)*random.nextDouble(); 
+                        double y1 = (Dodger.HEIGHT - eSize)*random.nextDouble(); 
+                        double xSpeed = Math.signum(0.5 - random.nextDouble())*Dodger.ENEMY_SPEED*(1 + random.nextDouble());
+                        double ySpeed = Math.signum(0.5 - random.nextDouble())*Dodger.ENEMY_SPEED*(1 + random.nextDouble());
+                        Roamer r = new Roamer(game, Color.RED, x1, y1, eSize, xSpeed, ySpeed, 1);
+                        testEnemies.add(r);
                     }
+                testEnemies.add(new Hunter(game, Color.RED, 0, 0, 25, 5, 1));
+                double pWidth = 50;
+                double pHeight = pWidth;
+                Player testPlayer = new Player(game, Dodger.WIDTH/2 - pWidth/2, Dodger.HEIGHT/2 - pHeight/2, pWidth, pHeight, currentGen[n], testEnemies);
+
+                boolean alive = true;
+                int cycles = 0;
+                while(alive && cycles < cycleLimit)
+                { 
+                    if(testPlayer.isActive())
+                    {
+                        testPlayer.update();
+                        for(Enemy e: testEnemies)
+                        {
+                            if(e instanceof Hunter)
+                            {
+                                Hunter r = (Hunter) e;
+                                r.setTarget((int) (testPlayer.getX() + testPlayer.getWidth()/2), (int) (testPlayer.getY() + testPlayer.getHeight()/2));
+                            }
+                        }
+                    }
+                    else
+                    {
+                        alive = false;
+                    }
+                    for(Enemy e: testEnemies)
+                    {
+                        e.update();
+                    }
+                    if(!testPlayer.getEnemyCollisions(testEnemies).isEmpty())
+                    {
+                        for(Enemy e: testPlayer.getEnemyCollisions(testEnemies))
+                        {
+                            testPlayer.damage(e.getDamage());
+                        }
+                    }
+                    cycles++;
                 }
-                cycles++;
-                if(cycles % 100 == 0)
-                {
-                    score += 136 - (testPlayer.distanceToMid())/10;
-                }
+                score += (cycles /60);
             }
-            currentGenScore[n] = cycles;
+            currentGenScore[n] = score/testAmount;
         }
     }
     
