@@ -50,7 +50,7 @@ public class EvolveThread extends Thread
     @Override
     public void run()
     {
-        crossGen(new int[]{15,15,15}, 1000, 0, "_23-10-18-v5_");  
+        crossGen(new int[]{15,15,15}, 100, 100, "_23-10-18-v5_");  
         calculated = true;
     }
     
