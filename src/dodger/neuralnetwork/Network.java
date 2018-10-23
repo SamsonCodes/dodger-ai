@@ -163,10 +163,14 @@ public class Network
 //                {
 //                    System.out.println("Weight = " + w);
 //                }
-                String perceptronString = XMLReader.getElement(neuronData, "perceptron");
+                String perceptronString = XMLReader.getElement(neuron, "perceptron");
                 boolean perceptron = false;
                 if(perceptronString.equals("true"))
                     perceptron = true; 
+                else if(perceptronString.equals("false"))
+                    perceptron = false;
+                else
+                    System.out.println("Something fishy!!!");
                 hiddenLayers.get(j)[i] = new Neuron(weightValues, biasValue, perceptron);
             }
             if(j > 0)
@@ -200,7 +204,7 @@ public class Network
 //                {
 //                    System.out.println("Weight = " + w);
 //                }
-                String perceptronString = XMLReader.getElement(neuronData, "perceptron");
+                String perceptronString = XMLReader.getElement(neuron, "perceptron");
                 boolean perceptron = false;
                 if(perceptronString.equals("true"))
                     perceptron = true; 
@@ -629,28 +633,12 @@ public class Network
             for(int i = 0; i <= rowSize[l + 1] - 1; i++)
             {
                 yLayer[l][i] = (int) ((2 + 3 * i + (maxRowSize - rowSize[l + 1]) * 1.5) * radius);
-                int[] brightness;
-                if(l == 0)
-                {
-                    brightness = new int[inputs.length];
-                    for(int n = 0; n < brightness.length; n++)
-                    {
-                        brightness[n] = (int) (50 + Math.abs((inputs[i]/inputRange))*205.0);
-                    }
-                }
-                else
-                {
-                    brightness = new int[hiddenLayers.get(l - 1).length];
-                    for(int n = 0; n < brightness.length; n++)
-                    {
-                        brightness[n] = (int) (50 + Math.abs(hiddenLayers.get(l - 1)[n].getOutput(inputs))*205.0);
-                    }
-                }
+               
                 if(l > 0)
                 {      
                     for(int n = 0; n < hiddenLayers.get(l)[i].getInputNeurons().size(); n++)
                     {
-                        g.setColor(new Color(brightness[n], brightness[n], brightness[n]));
+                        g.setColor(new Color(255, 255, 255));
                         g.drawLine(renderX + xLayer[l], renderY + yLayer[l][i], renderX + xLayer[l - 1], renderY + yLayer[l - 1][n]);
                     }
                 }
@@ -659,9 +647,9 @@ public class Network
                     for(int n = 0; n < rowSize[0]; n++)
                     {
                         if(inputs[n] > 0)
-                            g.setColor(new Color(brightness[n], brightness[n], brightness[n]));
+                            g.setColor(new Color(255, 255, 255));
                         else
-                            g.setColor(new Color(brightness[n], 50, 50));
+                            g.setColor(new Color(255, 50, 50));
                         
                         g.drawLine(renderX + xLayer[l], renderY + yLayer[l][i], renderX + xInput, renderY + yInput[n]);
                     }

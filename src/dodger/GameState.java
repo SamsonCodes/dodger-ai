@@ -24,17 +24,19 @@ public class GameState implements IState
     private Game game;
     private Player player;
     private ArrayList<Enemy> enemies;
-    private int score, maxScore;
+    private int score, maxScore, lastScore;
     private Random random = new Random();
-    private boolean play, showNetwork;
-    private final long SCORE_INTERVAL = 1000;
-    private long lastScore;
+    private boolean play;
+    private int showNetwork;
+    private final long SCORE_INTERVAL = 1000, ENTRY_COOLDOWN = 1000;
+    private long lastScoreIncrease, enterTime;
     
     public GameState(Dodger dodger, Game game)
     {
         this.dodger = dodger;
         this.game = game;
-        maxScore = 0;
+        maxScore = 0;        
+        lastScore = 0;
     }
     
     @Override
@@ -43,20 +45,32 @@ public class GameState implements IState
         System.out.println("Entering BaseState");
         enemies = new ArrayList(); 
         
-            double eSize = 25;
-        for(int i = 0; i < Dodger.ENEMY_NUMBER - 1; i++)
-        {
-            double x1 = (Dodger.WIDTH - eSize)*random.nextDouble(); 
-            double y1 = (Dodger.HEIGHT - eSize)*random.nextDouble(); 
-            double xSpeed = Math.signum(0.5 - random.nextDouble())*Dodger.ENEMY_SPEED*(1 + random.nextDouble());
-            double ySpeed = Math.signum(0.5 - random.nextDouble())*Dodger.ENEMY_SPEED*(1 + random.nextDouble());
-            Roamer r = new Roamer(game, Color.YELLOW, x1, y1, eSize, xSpeed, ySpeed, 1);
-            enemies.add(r);
-        }
-        enemies.add(new Hunter(game, Color.RED, 0, 0, 25, 5, 1));
+        double rSize = 25;        
+        double xSpeed = 0.71 * Dodger.ENEMY_SPEED;
+        double ySpeed = xSpeed;
+        int rDamage = 3;
+        
+        double x1 = (Dodger.WIDTH - rSize)/4; 
+        double y1 = (Dodger.HEIGHT - rSize)/4; 
+        Roamer r1 = new Roamer(game, Color.YELLOW, x1, y1, rSize, -xSpeed, -ySpeed, rDamage);
+        enemies.add(r1);
+        double x2 = (Dodger.WIDTH - rSize)/4; 
+        double y2 = 3*(Dodger.HEIGHT - rSize)/4; 
+        Roamer r2 = new Roamer(game, Color.YELLOW, x2, y2, rSize, -xSpeed, ySpeed, rDamage);
+        enemies.add(r2);
+        double x3 = 3*(Dodger.WIDTH - rSize)/4; 
+        double y3 = (Dodger.HEIGHT - rSize)/4; 
+        Roamer r3 = new Roamer(game, Color.YELLOW, x3, y3, rSize, xSpeed, -ySpeed, rDamage);
+        enemies.add(r3);
+        double x4 = 3*(Dodger.WIDTH - rSize)/4; 
+        double y4 = 3*(Dodger.HEIGHT - rSize)/4; 
+        Roamer r4 = new Roamer(game, Color.YELLOW, x4, y4, rSize, xSpeed, ySpeed, rDamage);
+        enemies.add(r4);            
+        enemies.add(new Hunter(game, Color.RED, 0, 0, 25, Dodger.ENEMY_SPEED/4, 1));
+        
         double pWidth = 50;
         double pHeight = pWidth;
-        showNetwork = false;
+        showNetwork = 0;
         if(dodger.getAI() != null)
         {
             player = new Player(game, Dodger.WIDTH/2 - pWidth/2, Dodger.HEIGHT/2 - pHeight/2, pWidth, pHeight, dodger.getAI(), enemies);
@@ -68,7 +82,8 @@ public class GameState implements IState
             play = false;
         }
         score = 0;
-        lastScore = System.currentTimeMillis();
+        lastScoreIncrease = System.currentTimeMillis();
+        enterTime = System.currentTimeMillis();
     }
     
     @Override
@@ -80,7 +95,7 @@ public class GameState implements IState
     @Override
     public void update() 
     {
-        if(!play)
+        if(!play && System.currentTimeMillis() - enterTime > ENTRY_COOLDOWN)
             if(game.getGui().getKeyManager().keys[KeyEvent.VK_UP]
                     || game.getGui().getKeyManager().keys[KeyEvent.VK_DOWN]
                     || game.getGui().getKeyManager().keys[KeyEvent.VK_LEFT]
@@ -96,10 +111,10 @@ public class GameState implements IState
                     r.setTarget((int) (player.getX() + player.getWidth()/2), (int) (player.getY() + player.getHeight()/2));
                 }
             }
-            if(System.currentTimeMillis() - lastScore > SCORE_INTERVAL)
+            if(System.currentTimeMillis() - lastScoreIncrease > SCORE_INTERVAL)
             {
                 score++;
-                lastScore = System.currentTimeMillis();
+                lastScoreIncrease = System.currentTimeMillis();
             }
             if(player.isActive())
             {
@@ -107,6 +122,7 @@ public class GameState implements IState
             }
             else
             {
+                lastScore = score;
                 maxScore = Math.max(score, maxScore);
                 onEnter();
             }
@@ -125,10 +141,16 @@ public class GameState implements IState
             }
             if(dodger.getAI() != null)
             {
-                if(game.getGui().getKeyManager().keys[KeyEvent.VK_9])
-                    showNetwork = true;
+                if(game.getGui().getKeyManager().keys[KeyEvent.VK_2])
+                    showNetwork = 2;
+                if(game.getGui().getKeyManager().keys[KeyEvent.VK_1])
+                    showNetwork = 1;
                 if(game.getGui().getKeyManager().keys[KeyEvent.VK_0])
-                    showNetwork = false;
+                    showNetwork = 0;
+            }
+            if(game.getGui().getKeyManager().keys[KeyEvent.VK_P])
+            {
+                play = false;
             }
         }
         if(game.getGui().getKeyManager().keys[KeyEvent.VK_ESCAPE])
@@ -141,10 +163,13 @@ public class GameState implements IState
     @Override
     public void render(Graphics g) 
     { 
-        if(showNetwork)
+        if(showNetwork == 2)
         {
             dodger.getAI().render(g, 0, 0, Dodger.WIDTH, Dodger.HEIGHT, player.getInputs(), Dodger.WIDTH);
         }
+        if(showNetwork == 1)
+            dodger.getAI().render(g, 0, 0, Dodger.WIDTH, Dodger.HEIGHT);
+        
         g.setColor(Color.WHITE);
         String s = "MAXSCORE  = " + maxScore;
         g.drawString(s, 0, g.getFont().getSize());
@@ -155,6 +180,12 @@ public class GameState implements IState
         {
             g.setColor(Color.WHITE);
             String s3 = "PRESS ARROW KEY TO START";
+            g.drawString(s3, 0, 3*g.getFont().getSize());
+        }
+        else
+        {
+            g.setColor(Color.WHITE);
+            String s3 = "LASTSCORE  = " + lastScore;
             g.drawString(s3, 0, 3*g.getFont().getSize());
         }
         if(player.isActive())

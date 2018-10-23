@@ -50,7 +50,7 @@ public class EvolveThread extends Thread
     @Override
     public void run()
     {
-        crossGen(new int[]{12, 6}, 100, 100, "_23-10-18-v3_");  
+        crossGen(new int[]{15,15,15}, 1000, 0, "_23-10-18-v5_");  
         calculated = true;
     }
     
@@ -170,22 +170,34 @@ public class EvolveThread extends Thread
             
             int score = 0;
             int cycleLimit = 100000;
-            int testAmount = 10;
+            int testAmount = 1;
             for(int t = 0; t < testAmount; t++)
             {
                 ArrayList<Enemy> testEnemies = new ArrayList(); 
 
-                    double eSize = 25;
-                    for(int i = 0; i < Dodger.ENEMY_NUMBER - 1; i++)
-                    {
-                        double x1 = (Dodger.WIDTH - eSize)*random.nextDouble(); 
-                        double y1 = (Dodger.HEIGHT - eSize)*random.nextDouble(); 
-                        double xSpeed = Math.signum(0.5 - random.nextDouble())*Dodger.ENEMY_SPEED*(1 + random.nextDouble());
-                        double ySpeed = Math.signum(0.5 - random.nextDouble())*Dodger.ENEMY_SPEED*(1 + random.nextDouble());
-                        Roamer r = new Roamer(game, Color.RED, x1, y1, eSize, xSpeed, ySpeed, 1);
-                        testEnemies.add(r);
-                    }
-                testEnemies.add(new Hunter(game, Color.RED, 0, 0, 25, 5, 1));
+                double rSize = 25;        
+                double xSpeed = 0.71 * Dodger.ENEMY_SPEED;
+                double ySpeed = xSpeed;
+                int rDamage = 3;
+
+                double x1 = (Dodger.WIDTH - rSize)/4; 
+                double y1 = (Dodger.HEIGHT - rSize)/4; 
+                Roamer r1 = new Roamer(game, Color.YELLOW, x1, y1, rSize, -xSpeed, -ySpeed, rDamage);
+                testEnemies.add(r1);
+                double x2 = (Dodger.WIDTH - rSize)/4; 
+                double y2 = 3*(Dodger.HEIGHT - rSize)/4; 
+                Roamer r2 = new Roamer(game, Color.YELLOW, x2, y2, rSize, -xSpeed, ySpeed, rDamage);
+                testEnemies.add(r2);
+                double x3 = 3*(Dodger.WIDTH - rSize)/4; 
+                double y3 = (Dodger.HEIGHT - rSize)/4; 
+                Roamer r3 = new Roamer(game, Color.YELLOW, x3, y3, rSize, xSpeed, -ySpeed, rDamage);
+                testEnemies.add(r3);
+                double x4 = 3*(Dodger.WIDTH - rSize)/4; 
+                double y4 = 3*(Dodger.HEIGHT - rSize)/4; 
+                Roamer r4 = new Roamer(game, Color.YELLOW, x4, y4, rSize, xSpeed, ySpeed, rDamage);
+                testEnemies.add(r4);            
+                testEnemies.add(new Hunter(game, Color.RED, 0, 0, 25, Dodger.ENEMY_SPEED/4, 1));
+        
                 double pWidth = 50;
                 double pHeight = pWidth;
                 Player testPlayer = new Player(game, Dodger.WIDTH/2 - pWidth/2, Dodger.HEIGHT/2 - pHeight/2, pWidth, pHeight, currentGen[n], testEnemies);

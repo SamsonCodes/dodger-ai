@@ -1,0 +1,2 @@
+<Network><inputNr>14</inputNr><hiddenLayers><layer><Neuron><perceptron>false</perceptron><bias>-6.173976</bias><weights>9.703186,-6.7866445,9.380245,2.0521128,-1.9142544,9.528328,-9.332766,-8.553612,3.7579691,-5.6412897,0.039224625,8.439036,1.8763852,2.9935062</weights></Neuron></layer></hiddenLayers><outputLayer><Neuron><perceptron>false</perceptron><bias>-2.1431792</bias><weights>8.069939</weights></Neuron><Neuron><perceptron>false</perceptron><bias>-7.3737164</bias><weights>-7.6586437</weights></Neuron></outputLayer></Network>
+<score>5</score>
