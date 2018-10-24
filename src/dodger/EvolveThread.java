@@ -7,6 +7,7 @@
 package dodger;
 
 import customgame.Game;
+import customgame.sound.WavPlayer;
 import dodger.entities.Enemy;
 import dodger.entities.Hunter;
 import dodger.entities.Player;
@@ -50,7 +51,9 @@ public class EvolveThread extends Thread
     @Override
     public void run()
     {
-        crossGen(new int[]{15,15,15}, 100, 100, "_23-10-18-v5_");  
+        WavPlayer wp = new WavPlayer();
+        wp.playSound(Dodger.PATH + "\\sounds\\chime_up.wav");
+        crossGen(new int[]{14,7}, 100, 1000, "_23-10-18-v5_");  
         calculated = true;
     }
     
@@ -161,6 +164,8 @@ public class EvolveThread extends Thread
         setAI();
         saveProgress(tag);
         System.out.println("CalculationTime = " + (System.currentTimeMillis() - startTime)/1000 + "s");
+        WavPlayer wp = new WavPlayer();
+        wp.playSound(Dodger.PATH + "\\sounds\\chime_up.wav");
     }
     
     private void testCurrentGen()
