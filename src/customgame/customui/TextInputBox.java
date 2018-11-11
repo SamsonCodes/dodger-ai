@@ -5,20 +5,20 @@
  */
 package customgame.customui;
 
+import com.sun.glass.events.KeyEvent;
 import customgame.Gui;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
-import java.awt.event.KeyEvent;
 
-public class InputBox extends UIElement
+public class TextInputBox extends UIElement
 {
 
     private long lastInput, inputCooldown;
     private String input;
     private boolean selected;
 
-    public InputBox(Gui gui, int x, int y, int width, int height)
+    public TextInputBox(Gui gui, int x, int y, int width, int height)
     {
         super(gui);
         this.x = x;
@@ -26,20 +26,20 @@ public class InputBox extends UIElement
         this.width = width;
         this.height = height;
         input = "";
-        inputCooldown = 500;
+        inputCooldown = 250;
         lastInput = System.currentTimeMillis();
         selected = false;
     }
-    
-    public InputBox(Gui gui, int x, int y, int width, int height, int input)
+
+    public TextInputBox(Gui gui, int x, int y, int width, int height, String input)
     {
         super(gui);
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
-        this.input = String.valueOf(input);
-        inputCooldown = 250;
+        this.input = input;
+        inputCooldown = 100;
         lastInput = System.currentTimeMillis();
         selected = false;
     }
@@ -75,78 +75,42 @@ public class InputBox extends UIElement
             }
             if (selected)
             {
-                if (gui.getKeyManager().keys[KeyEvent.VK_1])
+                if (System.currentTimeMillis() - lastInput > inputCooldown)
                 {
-                    lastInput = System.currentTimeMillis();
-                    input += "1";
-                }
-                if (gui.getKeyManager().keys[KeyEvent.VK_2])
-                {
-                    lastInput = System.currentTimeMillis();
-                    input += "2";
-                }
-                if (gui.getKeyManager().keys[KeyEvent.VK_3])
-                {
-                    lastInput = System.currentTimeMillis();
-                    input += "3";
-                }
-                if (gui.getKeyManager().keys[KeyEvent.VK_4])
-                {
-                    lastInput = System.currentTimeMillis();
-                    input += "4";
-                }
-                if (gui.getKeyManager().keys[KeyEvent.VK_5])
-                {
-                    lastInput = System.currentTimeMillis();
-                    input += "5";
-                }
-                if (gui.getKeyManager().keys[KeyEvent.VK_6])
-                {
-                    lastInput = System.currentTimeMillis();
-                    input += "6";
-                }
-                if (gui.getKeyManager().keys[KeyEvent.VK_7])
-                {
-                    lastInput = System.currentTimeMillis();
-                    input += "7";
-                }
-                if (gui.getKeyManager().keys[KeyEvent.VK_8])
-                {
-                    lastInput = System.currentTimeMillis();
-                    input += "8";
-                }
-                if (gui.getKeyManager().keys[KeyEvent.VK_9])
-                {
-                    lastInput = System.currentTimeMillis();
-                    input += "9";
-                }
-                if (gui.getKeyManager().keys[KeyEvent.VK_0])
-                {
-                    lastInput = System.currentTimeMillis();
-                    input += "0";
-                }
-                if (gui.getKeyManager().keys[KeyEvent.VK_BACK_SPACE])
-                {
-                    lastInput = System.currentTimeMillis();
-                    if (!input.isEmpty())
+                    if (gui.getKeyManager().keys[KeyEvent.VK_BACKSPACE])
                     {
-                        input = input.substring(0, input.length() - 1);
+                        lastInput = System.currentTimeMillis();
+                        input = removeLastChar(input);
                     }
+                }
+                char keyTyped = gui.getKeyManager().getChar();
+                if (keyTyped != '\u0000')
+                {
+                    input += keyTyped;
                 }
             }
         }
 
     }
 
-    public int getInput()
+    public String removeLastChar(String str)
+    {
+        if (str != null && str.length() > 0)
+        {
+            str = str.substring(0, str.length() - 1);
+        }
+        return str;
+    }
+
+    public String getInput()
     {
         if (!input.isEmpty())
         {
-            return Integer.parseInt(input);
+            return input;
         }
         else
         {
-            return -1;
+            return null;
         }
     }
 

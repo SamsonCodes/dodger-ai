@@ -11,25 +11,29 @@ import dodger.states.EvolveState;
 import dodger.states.MenuState;
 import customgame.Game;
 import dodger.neuralnetwork.Network;
+import dodger.states.FolderSelectionState;
 import dodger.states.InputState;
 
 public class Dodger 
 {
     private Game game;
-    public final static String TITLE = "DODGER", PATH = "C:\\Users\\Samson\\Documents\\NetBeansProjects\\Dodger\\src";
+    public final static String TITLE = "DODGER", PATH = "C:\\DodgerData", PROJECT_PATH = "C:\\Users\\Samson\\Documents\\NetBeansProjects\\Dodger\\src";
     public final static int WIDTH = 1100, HEIGHT = 800, OUTPUT_NR = 2, ENEMY_NUMBER = 5, ENEMY_SPEED = 20, PLAYER_SPEED = 10;
     private Network ai;
     private int[] hiddenLayers;
     private int population, generations;
+    private String saveFolder;
     
     public Dodger()
     {
+        saveFolder = PATH;
         game = new Game(TITLE, WIDTH, HEIGHT);
         game.getStateMachine().add("game", new GameState(this, game));
         game.getStateMachine().add("menu", new MenuState(game));
         game.getStateMachine().add("evolve", new EvolveState(this, game));
         game.getStateMachine().add("input", new InputState(this, game));
-        game.getStateMachine().change("menu");
+        game.getStateMachine().add("folderselection", new FolderSelectionState(this, game));
+        game.getStateMachine().change("folderselection");
         game.run();
     }
 
@@ -76,5 +80,15 @@ public class Dodger
     public void setGenerations(int generations)
     {
         this.generations = generations;
+    }
+    
+    public void setPath(String dir)
+    {
+        saveFolder = dir;
+    }
+    
+    public String getPath()
+    {
+        return saveFolder;
     }
 }

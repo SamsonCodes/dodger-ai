@@ -63,6 +63,12 @@ public class Button extends UIElement
         }
     }
     
+    public void reset()
+    {
+        pressed = false;
+        selected = false;
+    }
+    
     public void setSelected(boolean b)
     {
         selected = b;

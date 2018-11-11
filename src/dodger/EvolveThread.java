@@ -85,7 +85,7 @@ public class EvolveThread extends Thread
             currentGenScore[n] = 0;
         }
         System.out.print("Gen: " + generation + ", ");
-        wp.playSound(Dodger.PATH + "\\sounds\\chime_up.wav");
+        wp.playSound(Dodger.PROJECT_PATH + "\\sounds\\chime_up.wav");
         evoState.setMessage("Generation" + generation + ": 0/" + generations + ", Current Best = " + currentGenScore[0] + ", Historical Best = " + topScore);
         //fitness function, evaluation
         testCurrentGen();
@@ -166,7 +166,7 @@ public class EvolveThread extends Thread
         setAI();
         saveProgress(tag);
         System.out.println("CalculationTime = " + (System.currentTimeMillis() - startTime) / 1000 + "s");
-        wp.playSound(Dodger.PATH + "\\sounds\\chime_up.wav");
+        wp.playSound(Dodger.PROJECT_PATH + "\\sounds\\chime_up.wav");
     }
 
     private void testCurrentGen()
@@ -313,21 +313,21 @@ public class EvolveThread extends Thread
             }
 
             data.add("<generation>" + generation + "</generation>");
-            saveManager.saveData(data, tag + "evolution");
+            saveManager.saveData(data, dodger.getPath() + "\\" + tag + "evolution");
         }
         if (bestNetwork != null)
         {
             ArrayList<String> data2 = new ArrayList();
             data2.add(bestNetwork.createSaveData());
             data2.add("<score>" + topScore + "</score>");
-            saveManager.saveData(data2, tag + "bestNetwork");
+            saveManager.saveData(data2, dodger.getPath() + "\\" + tag + "bestNetwork");
         }
     }
 
     private boolean loadLastGen(String tag)
     {
         SaveManager saveManager = new SaveManager();
-        ArrayList<String> data = saveManager.loadData(tag + "evolution");
+        ArrayList<String> data = saveManager.loadData(dodger.getPath() + "\\" + tag + "evolution");
         if (data != null)
         {
             System.out.println("Loading data from: " + tag + "evolution.txt");
@@ -346,7 +346,7 @@ public class EvolveThread extends Thread
     private int getGeneration(String tag)
     {
         SaveManager saveManager = new SaveManager();
-        ArrayList<String> data = saveManager.loadData(tag + "evolution");
+        ArrayList<String> data = saveManager.loadData(dodger.getPath() + "\\" + tag + "evolution");
         if (data != null)
         {
             String gen = XMLReader.getElement(data.get(data.size() - 1), "generation");
@@ -369,7 +369,7 @@ public class EvolveThread extends Thread
     {
         Network network = null;
         SaveManager saveManager = new SaveManager();
-        ArrayList<String> data = saveManager.loadData(tag + "bestNetwork");
+        ArrayList<String> data = saveManager.loadData(dodger.getPath() + "\\" + tag + "bestNetwork");
         if (data != null)
         {
             network = new Network(data.get(0));
@@ -381,7 +381,7 @@ public class EvolveThread extends Thread
     {
         int lastRecord = 0;
         SaveManager saveManager = new SaveManager();
-        ArrayList<String> data = saveManager.loadData(tag + "bestNetwork");
+        ArrayList<String> data = saveManager.loadData(dodger.getPath() + "\\" + tag + "bestNetwork");
         if (data != null)
         {
             lastRecord = Integer.valueOf(XMLReader.getElement(data.get(1), "score"));

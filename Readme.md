@@ -9,4 +9,4 @@ You will then enter the Evolution State in which the neural network population e
 During the Game State with the AI you can use the 1, 2 and 3 buttons to toggle between network display modes. You can also press ESCAPE and return to the menu.
 
 Note:
-In the current version the saving and loading functionality only works in my Netbeans IDE (perhaps in yours as well if you import it into Netbeans, or change the target folder in the code) because it is saved in the project folder, but I might update that in the future.
+In order to use the saving functionality make sure to create and remember a dedicated save folder on your system. The default creates a new folder called DodgerData directly in your C directory, but you might want to save it somewhere else.

@@ -34,23 +34,25 @@ public class GameState implements IState
     public GameState(Dodger dodger, Game game)
     {
         this.dodger = dodger;
-        this.game = game;
-        String loadData = DataHandler.loadData(Dodger.PATH + "maxscore.txt");
-        if (!loadData.isEmpty())
-        {
-            maxScore = Integer.parseInt(loadData);
-        }
-        else
-        {
-            maxScore = 0;
-        }
+        this.game = game;           
         lastScore = 0;
     }
 
     @Override
     public void onEnter()
     {
-        System.out.println("Entering BaseState");
+        String loadData = DataHandler.loadData(dodger.getPath() + "\\maxscore.txt");
+        if (!loadData.isEmpty())
+        {
+            System.out.println("loadData (maxscore.txt) = " + loadData);
+            maxScore = Integer.parseInt(loadData);
+        }
+        else
+        {
+            System.out.println("Couldn't find maxscore.txt at " + dodger.getPath() + "\\maxscore.txt");
+            maxScore = 0;
+        }
+        System.out.println("Entering GameState");
         enemies = new ArrayList();
 
         double rSize = 25;
@@ -97,7 +99,7 @@ public class GameState implements IState
     @Override
     public void onExit()
     {
-        System.out.println("Exiting BaseState");
+        System.out.println("Exiting  GameState");
     }
 
     @Override
@@ -138,7 +140,7 @@ public class GameState implements IState
                 maxScore = Math.max(score, maxScore);
                 ArrayList<String> max = new ArrayList();
                 max.add(String.valueOf(maxScore));
-                DataHandler.saveData(max, Dodger.PATH + "maxscore.txt");
+                DataHandler.saveData(max, dodger.getPath() + "\\maxscore.txt");
                 onEnter();
             }
             for (Enemy e : enemies)

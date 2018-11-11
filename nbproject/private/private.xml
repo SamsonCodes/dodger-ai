@@ -3,18 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Samson/Documents/NetBeansProjects/Dodger/src/customgame/customui/Label.java</file>
-            <file>file:/C:/Users/Samson/Documents/NetBeansProjects/Dodger/src/dodger/states/GameState.java</file>
-            <file>file:/C:/Users/Samson/Documents/NetBeansProjects/Dodger/src/dodger/states/EvolveState.java</file>
-            <file>file:/C:/Users/Samson/Documents/NetBeansProjects/Dodger/src/dodger/EvolveThread.java</file>
-            <file>file:/C:/Users/Samson/Documents/NetBeansProjects/Dodger/src/dodger/Dodger.java</file>
             <file>file:/C:/Users/Samson/Documents/NetBeansProjects/Dodger/src/customgame/customui/InputBox.java</file>
-            <file>file:/C:/Users/Samson/Documents/NetBeansProjects/Dodger/src/dodger/states/MenuState.java</file>
-            <file>file:/C:/Users/Samson/Documents/NetBeansProjects/Dodger/src/dodger/states/InputState.java</file>
-            <file>file:/C:/Users/Samson/Documents/NetBeansProjects/Dodger/src/customgame/customui/UIElement.java</file>
-            <file>file:/C:/Users/Samson/Documents/NetBeansProjects/Dodger/src/customgame/Game.java</file>
-            <file>file:/C:/Users/Samson/Documents/NetBeansProjects/Dodger/src/customgame/customui/Button.java</file>
-            <file>file:/C:/Users/Samson/Documents/NetBeansProjects/Dodger/src/customgame/DataHandler.java</file>
+            <file>file:/C:/Users/Samson/Documents/NetBeansProjects/Dodger/src/customgame/input/KeyManager.java</file>
+            <file>file:/C:/Users/Samson/Documents/NetBeansProjects/Dodger/src/dodger/Dodger.java</file>
+            <file>file:/C:/Users/Samson/Documents/NetBeansProjects/Dodger/src/customgame/customui/TextInputBox.java</file>
+            <file>file:/C:/Users/Samson/Documents/NetBeansProjects/Dodger/src/dodger/states/FolderSelectionState.java</file>
         </group>
     </open-files>
 </project-private>

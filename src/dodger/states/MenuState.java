@@ -16,7 +16,7 @@ public class MenuState implements IState
 {
     private Game game;
     private OptionPanel panel;
-    private final String[] OPTIONS = {"Play", "AI", "Exit"};
+    private final String[] OPTIONS = {"Play", "AI", "Change Folder", "Exit"};
     private long startTime;
     private final long START_COOLDOWN = 500;
     
@@ -57,7 +57,10 @@ public class MenuState implements IState
                     case 1: 
                         game.getStateMachine().change("input");
                         break;
-                    case 2:
+                    case 2: 
+                        game.getStateMachine().change("folderselection");
+                        break;
+                    case 3:
                         System.exit(0);
                         break;
                 }
